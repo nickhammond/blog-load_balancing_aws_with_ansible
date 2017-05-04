@@ -2,6 +2,27 @@
 
 - hosts: localhost
   tasks:
+    - name: Get your current IP address
+      uri:
+        url: http://checkip.amazonaws.com/
+        return_content: yes
+      register: my_ip
+
+    - name: Create simple security group
+      ec2_group:
+        name: webservers
+        description: A security group for your current IP
+        region: us-west-1
+        rules:
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: "{{ my_ip.content | replace('\n', '') }}/32"
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: "{{ my_ip.content | replace('\n', '') }}/32"
+
     - name: Add EC2 instances
       ec2:
         key_name: nickhammond
