@@ -1,0 +1,18 @@
+---
+
+- hosts: localhost
+  tasks:
+    - name: Add EC2 instances
+      ec2:
+        key_name: nickhammond
+        instance_type: t2.nano
+        image: ami-f2b39792
+        region: us-west-1
+        group: webservers
+        wait: yes
+        instance_tags:
+          application: nickhammond
+        exact_count: 2
+        count_tag:
+          application: nickhammond
+      register: ec2_instances
