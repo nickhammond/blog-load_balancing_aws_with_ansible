@@ -22,6 +22,11 @@
             from_port: 22
             to_port: 22
             cidr_ip: "{{ my_ip.content | replace('\n', '') }}/32"
+        rules_egress:
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: 0.0.0.0/0
 
     - name: Add EC2 instances
       ec2:
