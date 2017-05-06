@@ -29,7 +29,6 @@
             cidr_ip: 0.0.0.0/0
       register: webservers_group
 
-
     - name: Create the ELB only listening over port 80
       ec2_elb_lb:
         name: nickhammond-load-balancer
@@ -79,7 +78,6 @@
   become: True
   tasks:
     - name: Install nginx
-      become: True
       apt:
         name: nginx
         state: present
@@ -87,11 +85,11 @@
       copy:
         dest: /usr/share/nginx/html/index.html
         content: "Howdy from {{ ansible_hostname }}"
-
     - name: Restart nginx
       service:
         name: nginx
         state: restarted
+
 
 - hosts: localhost
   tasks:
