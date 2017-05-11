@@ -31,7 +31,7 @@
 
     - name: Create the ELB only listening over port 80
       ec2_elb_lb:
-        name: nickhammond-load-balancer
+        name: "{{ application }}-load-balancer"
         state: present
         region: us-west-1
         zones:
@@ -54,10 +54,10 @@
           - "{{ elb.elb.security_group_ids | first }}"
         wait: yes
         instance_tags:
-          application: nickhammond
-        exact_count: 2
+          application: "{{ application }}"
+        exact_count: "{{ instance_count }}"
         count_tag:
-          application: nickhammond
+          application: "{{ application }}"
       register: ec2_instances
 
     - name: Store EC2 instance IPs to provision against
@@ -103,7 +103,7 @@
     - name: Add each EC2 instance to the ELB
       ec2_elb:
         state: present
-        ec2_elbs: nickhammond-load-balancer
+        ec2_elbs: "{{ application }}-load-balancer"
         region: "{{ item.region }}"
         instance_id: "{{ item.id }}"
       with_items: "{{ ec2_instances.tagged_instances }}"
